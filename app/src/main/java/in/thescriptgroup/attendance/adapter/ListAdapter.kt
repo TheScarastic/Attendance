@@ -4,20 +4,37 @@ import `in`.thescriptgroup.attendance.R
 import `in`.thescriptgroup.attendance.databinding.ListItemBinding
 import `in`.thescriptgroup.attendance.models.Subject
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import javax.inject.Inject
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import kotlin.math.abs
 
-class ListAdapter @Inject constructor(private val list: ArrayList<Subject>) :
+class ListAdapter(
+    private val context: Context,
+    private val list: ArrayList<Subject>
+) :
     RecyclerView.Adapter<ListAdapter.SubjectViewHolder>() {
 
-    @Inject
-    lateinit var sharedPref: SharedPreferences
+    var sharedPref: SharedPreferences
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface MyEntryPoint {
+        fun getSharedPref(): SharedPreferences
+    }
+
+    init {
+        val myEntryPoint = EntryPointAccessors.fromApplication(context, MyEntryPoint::class.java)
+        sharedPref = myEntryPoint.getSharedPref()
+    }
 
     class SubjectViewHolder(private val binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {

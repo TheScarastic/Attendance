@@ -5,7 +5,6 @@ import `in`.thescriptgroup.attendance.adapter.ListAdapter
 import `in`.thescriptgroup.attendance.api.Attendance
 import `in`.thescriptgroup.attendance.databinding.FragmentAttendanceBinding
 import `in`.thescriptgroup.attendance.models.Subject
-import `in`.thescriptgroup.attendance.models.SubjectList
 import `in`.thescriptgroup.attendance.utils.viewBinding
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -22,6 +21,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.gson.Gson
+import com.squareup.moshi.Moshi
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,6 +40,9 @@ class AttendanceFragment : Fragment(R.layout.fragment_attendance) {
 
     @Inject
     lateinit var retrofit: Retrofit
+
+    @Inject
+    lateinit var moshi: Moshi
 
     val gson = Gson()
 
@@ -200,7 +203,7 @@ class AttendanceFragment : Fragment(R.layout.fragment_attendance) {
 
         binding.attendanceRecycler.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = ListAdapter(attendance)
+            adapter = ListAdapter(requireContext(), attendance)
         }
     }
 
